@@ -19,6 +19,8 @@ with open('parameters.json', 'r') as jsonfile:
 	params = json.load(jsonfile)
 
 img_path =  params[0]['images_path'] #"dataset/images"
+mailgun_Api_KEY = '<MailGun API KEY>'
+mailgun_endpoint_URL = '<MailGun Endpoint URL>'
 
 #Initialize 'currentname' to trigger only when a new person is identified.
 currentname = "unknown"
@@ -33,8 +35,8 @@ pir = MotionSensor(4)
 #function for setting up emails
 def send_message(name,img, from_email,to_email):
     return requests.post(
-        "https://api.mailgun.net/v3/sandbox74667d33f04c457798cafe211b51ce0f.mailgun.org/messages",
-        auth=("api", "facd17ed1483ee93b6995c05ae25e37b-fe066263-e603fb88"),
+        mailgun_endpoint_URL,
+        auth=("api", mailgun_Api_KEY),
         files = [("attachment", (img, open(img, "rb").read()))],
         data={"from": from_email,
             "to": [to_email],
