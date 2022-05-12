@@ -1,0 +1,29 @@
+[
+	{
+		"id": 1,
+		"status": "default",
+		"greeting": "Welcome home",
+		"email_subject": "Back to Home",
+		"from_email": "hello@example.com",
+		"to_email":"a.buddy12@gmail.com",
+		"images_path":"dataset/images"
+	},
+	{
+		"id": 2,
+		"status": "not-recognized",
+		"greeting": "Welcome Onwer is notified for your presence Someone will be with you shortly",
+		"email_subject": "You have a Visitor",
+		"from_email": "hello@example.com",
+		"to_email":"a.buddy12@gmail.com",
+		"images_path":"dataset/images"
+	},
+	{
+		"id": 3,
+		"status":"nobody-home",
+		"greeting": "",
+		"email_subject": "You have a Visitor",
+		"from_email": "hello@example.com",
+		"to_email":"a.buddy12@gmail.com",
+		"images_path":"dataset/images"
+	}
+]
