@@ -71,16 +71,19 @@ def send_email(img, name=""):
 
 
 def load_params():
-    try:
-        with open(settings_path, 'r') as jsonfile:
-            params = json.load(jsonfile)
-    except:
-        return {"found": False, "params": ""}
+    print(settings_path)
+    if os.path.exists(settings_path):
+        try:
+            with open(settings_path, 'r') as jsonfile:
+                params = json.load(jsonfile)
+        except:
+            return {"found": False, "params": ""}
 
-    return {"found": False, "params": params}
-
+        return {"found": False, "params": params}
+    return {"found": False, "params": ""}
 
 def load_encodings():
+    print(encodings_path)
     if os.path.exists(encodings_path):
         try:
             data = pickle.loads(open(encodings_path, "rb").read())
