@@ -174,7 +174,7 @@ def start_detector_server():
             # but we need them in (top, right, bottom, left) order, so we
             # need to do a bit of reordering
             boxes = [(y, x + w, y + h, x) for (x, y, w, h) in rects]
-            print("boxes detected")
+            print("boxes detected", str(len(boxes)))
 
             encs = load_encodings()
             img_name = ""
@@ -255,6 +255,7 @@ def start_detector_server():
             os.remove(tmp_image)
             print("[INFO]: Removed image")
             currentname = name
+            lastTime = currentTime
             # update the FPS counter
             #fps.update()
             #----------------
