@@ -110,6 +110,7 @@ def start_detector_server():
     while True:
         try:
             pir.wait_for_motion()
+            print("Motion detected")
             # grab the frame from the threaded video stream and resize it
             # to 500px (to speedup processing)
             frame = vs.read()
@@ -128,9 +129,11 @@ def start_detector_server():
             # but we need them in (top, right, bottom, left) order, so we
             # need to do a bit of reordering
             boxes = [(y, x + w, y + h, x) for (x, y, w, h) in rects]
+            print("boxes detected")
 
             encs = load_encodings()
             img_name = ""
+            print("encs", encs)
 
             if encs["found"]:
                 # compute the facial embeddings for each face bounding box
@@ -179,7 +182,7 @@ def start_detector_server():
                     names.append(name)
 
             # ===== If Image is not present in DB =====
-            #print(f"name, currentname:{name},{currentname}")
+            print(f"name, currentname:{name},{currentname}")
             if currentname != name and name == 'Unknown':
                 print(f"Visitor: {name}")
                 # Take a picture to send in the email
