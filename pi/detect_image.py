@@ -96,11 +96,15 @@ def detect_from_image(camera):
     detector = cv2.CascadeClassifier(cascade)
     
     camera.capture("img.jpg")
-    print("Done.")
+    print("Image Captured")
 
     frame = cv2.imread("img.jpg")
+    print("Read frame")
+    
     # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     frame = imutils.resize(frame, width=500)
+    print("Frame resize")
+    
     # convert the input frame from (1) BGR to grayscale (for face
     # detection) and (2) from BGR to RGB (for face recognition)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -115,10 +119,11 @@ def detect_from_image(camera):
     # but we need them in (top, right, bottom, left) order, so we
     # need to do a bit of reordering
     boxes = [(y, x + w, y + h, x) for (x, y, w, h) in rects]
-
+    print("Boxes")
+    
     encs = load_encodings()
     img_name = ""
-
+    
     if encs["found"]:
         # compute the facial embeddings for each face bounding box
         encodings = face_recognition.face_encodings(rgb, boxes)
