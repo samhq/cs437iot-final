@@ -140,7 +140,7 @@ def trainImage(deviceId):
     images_path = data_path+"/"+deviceId+"/images"
 
     train = trainModelFromImages(images_path, encode_path)
-
+    # train = False
     if not train:
         return {"error": True, "message": "Cannot train now"}, 503
 
