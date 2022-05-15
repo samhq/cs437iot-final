@@ -92,8 +92,8 @@ def load_encodings():
 
 def start_detector_server():
     # Initialize 'currentname' to trigger only when a new person is identified.
-    currentname = "unknown"
-    name = ""
+    currentname = ""
+    name = "Unknown"
 
     # use this xml file
     cascade = "haarcascade_frontalface_default.xml"
@@ -188,10 +188,12 @@ def start_detector_server():
                 # Take a picture to send in the email
                 img_cnt = len([entry for entry in os.listdir(images_path)
                             if os.path.isfile(os.path.join(images_path, entry))]) + 1
+                print("cnt", img_cnt)
                 var_timestamp = str(
                     datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-                img_name = images_path + "/Unknown-" + \
-                    str(img_cnt) + "-" + var_timestamp + ".jpg"
+                print("tm", var_timestamp)
+                img_name = images_path + "/Unknown-" + str(img_cnt) + "-" + var_timestamp + ".jpg"
+                print("img", img_name)
                 cv2.imwrite(img_name, frame)
 
                 print('[INFO]: Taking a picture and Saving it in Visitors Log.')
