@@ -35,4 +35,4 @@ def encodings():
     return {"error": False, "message": "Successfully uploaded"}, 200
 
 def start_api_server():
-    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
+    app.run(debug=False, use_reloader=False, host='0.0.0.0', port=5000)
