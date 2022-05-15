@@ -75,7 +75,7 @@ def load_params():
     if os.path.exists(settings_path):
         with open(settings_path, 'r') as jsonfile:
             params = json.load(jsonfile)
-        return {"found": False, "params": params}
+        return {"found": True, "params": params}
     return {"found": False, "params": ""}
 
 def load_encodings():
