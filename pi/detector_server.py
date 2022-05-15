@@ -81,12 +81,13 @@ def load_params():
 
 
 def load_encodings():
-    try:
-        data = pickle.loads(open(encodings_path, "rb").read())
-    except:
-        return {"found": False, "data": ""}
-
-    return {"found": True, "data": data}
+    if os.path.exists(encodings_path):
+        try:
+            data = pickle.loads(open(encodings_path, "rb").read())
+        except:
+            return {"found": False, "data": ""}
+        return {"found": True, "data": data}
+    return {"found": False, "data": ""}
 
 
 def start_detector_server():
