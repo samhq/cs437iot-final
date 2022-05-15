@@ -77,12 +77,13 @@ def load_params():
 
 
 def load_encodings():
-    try:
-        data = pickle.loads(open(encodings_path, "rb").read())
-    except:
-        return {"found": False, "data": ""}
-
-    return {"found": True, "data": data}
+    if os.path.exists(encodings_path):
+        try:
+            data = pickle.loads(open(encodings_path, "rb").read())
+        except:
+            return {"found": False, "data": ""}
+        return {"found": True, "data": data}
+    return {"found": False, "data": ""}
 
 
 def detect_from_image(camera):
@@ -123,7 +124,7 @@ def detect_from_image(camera):
     
     encs = load_encodings()
     img_name = ""
-    
+    print("Encs", encs)
     if encs["found"]:
         # compute the facial embeddings for each face bounding box
         encodings = face_recognition.face_encodings(rgb, boxes)
