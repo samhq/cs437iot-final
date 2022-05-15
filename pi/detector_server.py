@@ -31,7 +31,7 @@ def upload_images(images):
         d = {}
         for i in images:
             image_file = open(i, "rb")
-            r = requests.post(server_url+"/upload/"+params["data"]["deviceId"],
+            r = requests.post(server_url+"/upload/"+params["params"]["deviceId"],
                               files={"image_file": image_file})
             if not r.ok:
                 d[i] = "ERROR"
@@ -92,8 +92,8 @@ def load_encodings():
 
 def start_detector_server():
     # Initialize 'currentname' to trigger only when a new person is identified.
-    currentname = ""
-    name = "Unknown"
+    currentname = "Unknown"
+    name = ""
 
     # use this xml file
     cascade = "haarcascade_frontalface_default.xml"
