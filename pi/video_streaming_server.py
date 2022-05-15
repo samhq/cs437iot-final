@@ -18,7 +18,7 @@ PAGE="""\
 </head>
 <body>
 <h1>PiCamera MJPEG Streaming Demo</h1>
-<img src="stream.mjpg" width="640" height="480" />
+<img src="stream.mjpg" width="640" height="360" />
 </body>
 </html>
 """
@@ -102,7 +102,7 @@ class FrameBuffer(object):
             self.buffer.seek(0)
         return self.buffer.write(buf)
 
-with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
+with picamera.PiCamera(resolution='640x360', framerate=24) as camera:
     #global output
     #camera.rotation = 0
     output = FrameBuffer()

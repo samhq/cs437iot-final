@@ -142,10 +142,16 @@ def start_detector_server():
             print("Stream ended.")
             # take picture with camera
             with picamera.PiCamera() as camera:
-                 #change resolution to get better latency
-                 camera.resolution = (640,480)
-                 camera.capture(tmp_image)     #CHANGE PATH TO YOUR USB THUMBDRIVE
-                 camera.close()
+                #change resolution to get better latency
+                print("Capturing picture...")
+                camera.resolution = (640,480)
+                print("Resolution set")
+                camera.capture(tmp_image)     #CHANGE PATH TO YOUR USB THUMBDRIVE
+                print("Captured picture")
+                time.sleep(2)
+                camera.close()
+                print("Closing camera")
+                
             # alert picture taken
             print("Picture taken.")
             # run live stream again
