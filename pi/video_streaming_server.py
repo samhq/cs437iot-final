@@ -50,7 +50,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                     if pir.motion_detected:
                         # capture...
                         print("motion detected")
-                        detect_from_image()
+                        # detect_from_image()
                     
                     with output.condition:
                         output.condition.wait()
