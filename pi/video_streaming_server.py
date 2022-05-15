@@ -48,25 +48,7 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
             try:
-                motion = 0.0
                 while True:
-                    if pir.motion_detected and time.time() - motion > 150:
-                        # capture...
-                        print("motion detected", motion)
-                        camera.wait_recording(15)
-                        print("recording wait")
-                        
-                        time.sleep(1)
-                        detect_from_image(camera)
-                        print("detect done")
-                        
-                        time.sleep(1)
-                        camera.start_recording(output, format='mjpeg')
-                        print("recording started")
-                        
-                        time.sleep(1)
-                        motion = time.time()
-                    
                     with output.condition:
                         output.condition.wait()
                         frame = output.frame
@@ -109,12 +91,30 @@ class FrameBuffer(object):
 def start_video_server():
     global output
     camera.rotation = 0
+    motion = 0.0
+    address = ('', 8000)
+    server = StreamingServer(address, StreamingHandler)
+    print("Starting video streaming...")
+    server.serve_forever()
+    # server.server_close()
     output = FrameBuffer()
     camera.start_recording(output, format='mjpeg')
-    try:
-        address = ('', 8000)
-        server = StreamingServer(address, StreamingHandler)
-        print("Starting video streaming...")
-        server.serve_forever()
-    finally:
-        camera.stop_recording()
+    
+    while True:
+        pir.wait_for_motion()
+        try:
+            camera.stop_recording()
+            if time.time() - motion > 150:
+                # capture...
+                print("motion detected", motion)
+                time.sleep(1)
+                detect_from_image(camera)
+                print("detect done")           
+                time.sleep(1)
+                motion = time.time()
+            
+            pir.wait_for_no_motion()
+            camera.start_recording(output, format='mjpeg')
+        except:
+            break
+    

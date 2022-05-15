@@ -207,8 +207,8 @@ def start_detector_server():
             # update the FPS counter
             fps.update()
             pir.wait_for_no_motion()
-        except:
-            print("[ERROR]: Exception")
+        except Exception as e:
+            print("[ERROR]: Exception: ", e)
             break
 
     # stop the timer and display FPS information
