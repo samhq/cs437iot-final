@@ -50,7 +50,7 @@ def send_email(img, name=""):
     if params["found"] and len(params["params"]["notificationEmails"]) > 0:
         to_emails = params["params"]["notificationEmails"]
 
-    print(to_emails)
+    # print(to_emails)
     
     subject = "Somebody came at your house"
     message = "Somebody is at your door"
@@ -74,7 +74,7 @@ def send_email(img, name=""):
 
 
 def load_params():
-    print(settings_path)
+    # print(settings_path)
     if os.path.exists(settings_path):
         with open(settings_path, 'r') as jsonfile:
             params = json.load(jsonfile)
@@ -83,7 +83,7 @@ def load_params():
 
 
 def load_encodings():
-    print(encodings_path)
+    # print(encodings_path)
     if os.path.exists(encodings_path):
         data = pickle.loads(open(encodings_path, "rb").read())
 
@@ -92,10 +92,6 @@ def load_encodings():
 
 
 def start_detector_server():
-    # Initialize 'currentname' to trigger only when a new person is identified.
-    currentname = ""
-    name = "Unknown"
-
     # use this xml file
     cascade = "haarcascade_frontalface_default.xml"
     print("[INFO]: face detector...")
@@ -109,6 +105,10 @@ def start_detector_server():
     # start the FPS counter
     fps = FPS().start()
     while True:
+        # Initialize 'currentname' to trigger only when a new person is identified.
+        currentname = ""
+        name = "Unknown"
+        
         try:
             pir.wait_for_motion()
             print("Motion detected")
