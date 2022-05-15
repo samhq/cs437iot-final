@@ -9,8 +9,9 @@ def trainModelFromImages(imageDir, encodingPath):
     try:
         # our images are located in the dataset folder
         print("[INFO] start processing faces...")
-        imageDir = "dataset/images"
+        # imageDir = "dataset/images"
         imagePaths = list(sorted(paths.list_images(imageDir)))
+        # print(imagePaths)
         # initialize the list of known encodings and known names
         knownEncodings = []
         knownNames = []

@@ -179,7 +179,7 @@ def start_detector_server():
             if len(boxes) > 0:
                 encs = load_encodings()
                 img_name = ""
-                print("encs", encs)
+                # print("encs", encs)
 
                 if encs["found"]:
                     # compute the facial embeddings for each face bounding box
