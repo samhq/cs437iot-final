@@ -28,17 +28,18 @@ pir = MotionSensor(4)
 def upload_images(images):
     params = load_params()
     if params["found"]:
-        d = {}
+        ok = 0
+        notok = 0
         for i in images:
             image_file = open(i, "rb")
             r = requests.post(server_url+"/upload/"+params["params"]["deviceId"],
                               files={"image_file": image_file})
             if not r.ok:
-                d[i] = "ERROR"
+                notok = notok + 1
             else:
-                d[i] = "SUCCESS"
+                ok = ok + 1
 
-        return d
+        return "Ok: "+str(ok)+", Not Ok: "+str(notok)
     else:
         return "Settings file not found"
 
@@ -78,11 +79,12 @@ def load_params():
         return {"found": True, "params": params}
     return {"found": False, "params": ""}
 
+
 def load_encodings():
     print(encodings_path)
     if os.path.exists(encodings_path):
         data = pickle.loads(open(encodings_path, "rb").read())
-        
+
         return {"found": True, "data": data}
     return {"found": False, "data": ""}
 
@@ -198,10 +200,10 @@ def start_detector_server():
                 print('[INFO]: Taking a picture and Saving it in Visitors Log.')
                 os.system(
                     'espeak -ven+f1 -g5 -s160 "Welcome! Someone will be with you shortly."')
-            
+
             up = upload_images([img_name])
             print("[INFO]: Uploading images: ", up)
-            
+
             em = send_email(img_name, name)
             print("[INFO]: Sending email: ", em)
             os.remove(img_name)

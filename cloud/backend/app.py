@@ -196,7 +196,7 @@ def Image(deviceId, filename):
 def upload_file(deviceId):
     file = request.files['image_file']
     path_to_save = data_path + "/"+deviceId + \
-        "/images/"+{secure_filename(file.filename)}
+        "/images/"+secure_filename(file.filename)
     file.save(path_to_save)
 
     return {"error": False, "message": "Successfully uploaded"}, 200
