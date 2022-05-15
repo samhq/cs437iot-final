@@ -24,6 +24,7 @@ settings_path = data_path+"/settings.json"
 encodings_path = data_path+"/encodings.pickle"
 images_path = data_path+"/images"
 server_url = config["SERVER_URL"]
+
 pir = MotionSensor(4)
 
 ipath = dir_path+"/video_streaming_server.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py

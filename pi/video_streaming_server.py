@@ -117,5 +117,5 @@ def start_video_server():
         finally:
             camera.stop_recording()
 
-if __name__ == "__main__":
-    start_video_server()
+# if __name__ == "__main__":
+#     start_video_server()
