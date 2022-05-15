@@ -1,6 +1,4 @@
 # import the necessary packages
-from imutils.video import VideoStream
-from imutils.video import FPS
 import face_recognition
 import imutils
 import pickle
@@ -8,12 +6,17 @@ import time
 import cv2
 import requests
 from gpiozero import MotionSensor
-import os
+import os, signal, threading
 import json
 import datetime
 import picamera
 import requests
 from dotenv import dotenv_values
+import subprocess
+from subprocess import check_call, call
+import sys
+import glob
+import time
 
 config = dotenv_values(".env")
 
@@ -24,16 +27,17 @@ settings_path = data_path+"/settings.json"
 encodings_path = data_path+"/encodings.pickle"
 images_path = data_path+"/images"
 server_url = config["SERVER_URL"]
-
 pir = MotionSensor(4)
 
-ipath = dir_path+"/video_streaming_server.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
+ipath = dir_path+"/main.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
 
 def thread_second():
     call(["python3", ipath])
 
 def check_kill_process(pstring):
+    print(f"Inside Check Kill:{pstring}")
     for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
+        print(f"line:{line}")
         fields = line.split()
         print(fields)
         pid = fields[0]
@@ -118,10 +122,10 @@ def start_detector_server():
     # initialize the video stream and allow the camera sensor to warm up
     # print("[INFO] starting video stream...")
     #---AK vs = VideoStream(usePiCamera=True).start()
-    time.sleep(2.0)
+    #time.sleep(2.0)
 
     # start the FPS counter
-    fps = FPS().start()
+    #fps = FPS().start()
     while True:
         # Initialize 'currentname' to trigger only when a new person is identified.
         currentname = ""
@@ -133,14 +137,15 @@ def start_detector_server():
             # grab the frame from the threaded video stream and resize it
             # to 500px (to speedup processing)
             #------
-            check_kill_process('video_streaming_server.py')
+            check_kill_process('main.py')
+            time.sleep(2)            
             print("Stream ended.")
             # take picture with camera
             with picamera.PiCamera() as camera:
                  #change resolution to get better latency
                  camera.resolution = (640,480)
                  camera.capture(tmp_image)     #CHANGE PATH TO YOUR USB THUMBDRIVE
-
+                 camera.close()
             # alert picture taken
             print("Picture taken.")
             # run live stream again
@@ -248,7 +253,7 @@ def start_detector_server():
             print("[INFO]: Removed image")
             currentname = name
             # update the FPS counter
-            fps.update()
+            #fps.update()
             #----------------
             # run live stream again
             processThread = threading.Thread(target=thread_second)
@@ -262,9 +267,9 @@ def start_detector_server():
             break
 
     # stop the timer and display FPS information
-    fps.stop()
-    print("[INFO]: Elasped time: {:.2f}".format(fps.elapsed()))
-    print("[INFO]: Approx. FPS: {:.2f}".format(fps.fps()))
+    #fps.stop()
+    #print("[INFO]: Elasped time: {:.2f}".format(fps.elapsed()))
+    #print("[INFO]: Approx. FPS: {:.2f}".format(fps.fps()))
 
     # do a bit of cleanup
     cv2.destroyAllWindows()

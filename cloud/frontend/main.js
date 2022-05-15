@@ -3,7 +3,7 @@ var app = new Vue({
     data() {
         return {
             selectedDevice: {},
-            backendSrc: "http://192.168.0.110:5000",
+            backendSrc: "http://192.168.0.240:5000",
             links: ["History", "Settings", "Live Feed"],
             selectedLink: "",
             devices: [],
@@ -15,22 +15,7 @@ var app = new Vue({
             },
             title: "Smart Greetings and Security System",
             defaultTitle: "Smart Greetings and Security System",
-            history: [{
-                    name: "x",
-                    image: "https://via.placeholder.com/640x360.png",
-                    date: "2022-05-13 18:12:48"
-                },
-                {
-                    name: "y",
-                    image: "https://via.placeholder.com/640x360.png",
-                    date: "2022-05-13 16:02:25"
-                },
-                {
-                    name: "z",
-                    image: "https://via.placeholder.com/640x360.png",
-                    date: "2022-05-13 09:11:07"
-                },
-            ],
+            history: [],
             currentSettings: "",
             personNameToRename: "",
             fileToRename: ""

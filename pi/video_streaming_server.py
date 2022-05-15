@@ -4,7 +4,8 @@ import logging
 import socketserver
 from threading import Condition
 from http import server
-import threading, os, signal
+import threading, os
+import signal
 import subprocess
 from subprocess import check_call, call
 import sys
@@ -25,12 +26,14 @@ PAGE="""\
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 ipath = dir_path+"/detector_server.py"    #CHANGE PATH TO LOCATION OF mouse.py
+#print(f"ipath:{ipath}")
 
 def thread_second():
     call(["python3", ipath])
 
 def check_kill_process(pstring):
     for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
+        print(f"line:{line}")
         fields = line.split()
         pid = fields[0]
         os.kill(int(pid), signal.SIGKILL)
@@ -98,24 +101,25 @@ class FrameBuffer(object):
                 self.condition.notify_all()
             self.buffer.seek(0)
         return self.buffer.write(buf)
-    
-def start_video_server():
-    with picamera.PiCamera(resolution='640x360', framerate=24) as camera:
-        global output
-        camera.rotation = 0
-        output = FrameBuffer()
-        camera.start_recording(output, format='mjpeg')
-        try:
-            address = ('', 8000)
-            server = StreamingServer(address, StreamingHandler)
-            print("Streaming.")
-            check_kill_process("detector_server.py")
-            processThread = threading.Thread(target=thread_second)
-            processThread.start()
-            print("Waiting for Motion to be Detected.")
-            server.serve_forever()
-        finally:
-            camera.stop_recording()
 
-# if __name__ == "__main__":
-#     start_video_server()
+with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
+    #global output
+    #camera.rotation = 0
+    output = FrameBuffer()
+    camera.start_recording(output, format='mjpeg')
+    try:
+        address = ('', 8000)
+        server = StreamingServer(address, StreamingHandler)
+        print("Streaming.")
+        check_kill_process("detector_server.py")
+        processThread = threading.Thread(target=thread_second)
+        processThread.start()
+        print("Waiting for Motion to be Detected.")
+        server.serve_forever()
+    finally:
+        camera.stop_recording()
+        camera.close()
+
+# print in the command line instead of file's console
+#if __name__ == '__main__':
+#    main()

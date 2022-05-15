@@ -4,7 +4,7 @@ from api_server import start_api_server
 # from detector_server import start_detector_server
 # from pyngrok import ngrok
 
-vid_srv = threading.Thread(target=start_video_server, daemon=True)
+vid_srv = threading.Thread(target=main, daemon=True)
 api_srv = threading.Thread(target=start_api_server, daemon=True)
 # det_srv = threading.Thread(target=start_detector_server, daemon=True)
 
