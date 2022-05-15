@@ -47,9 +47,11 @@ def upload_images(images):
 def send_email(img, name=""):
     params = load_params()
     to_emails = config["DEFAULT_TO_EMAILS"].split(",")
-    if params["found"] and len(params["found"]["notificationEmails"]) > 0:
-        to_emails = params["found"]["notificationEmails"]
+    if params["found"] and len(params["params"]["notificationEmails"]) > 0:
+        to_emails = params["params"]["notificationEmails"]
 
+    print(to_emails)
+    
     subject = "Somebody came at your house"
     message = "Somebody is at your door"
     if name != "":
@@ -203,7 +205,6 @@ def start_detector_server():
 
             up = upload_images([img_name])
             print("[INFO]: Uploading images: ", up)
-
             em = send_email(img_name, name)
             print("[INFO]: Sending email: ", em)
             os.remove(img_name)
