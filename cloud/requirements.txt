@@ -3,3 +3,5 @@ flask-cors
 face-recognition
 imutils
 python-dotenv
+opencv-python~=4.5.3.56
+numpy>=1.20.0

@@ -9,7 +9,6 @@ import cv2
 import requests
 from gpiozero import MotionSensor
 import os
-from espeak import espeak
 import json
 import datetime
 import requests
