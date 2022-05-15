@@ -9,6 +9,7 @@ from detect_image import detect_from_image
 import time
 
 pir = MotionSensor(4)
+camera = picamera.PiCamera(resolution='640x360', framerate=24)
 
 PAGE="""\
 <html>
@@ -47,14 +48,18 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
             try:
-                motion = 0
+                motion = 0.0
                 while True:
-                    if pir.motion_detected:
+                    if pir.motion_detected and time.time() - motion < 120:
                         # capture...
                         print("motion detected")
+                        camera.stop_recording()
                         time.sleep(2)
-                        detect_from_image()
+                        detect_from_image(camera)
                         time.sleep(10)
+                        camera.start_recording(output, format='mjpeg')
+                        time.sleep(2)
+                        motion = time.time()
                     
                     with output.condition:
                         output.condition.wait()
@@ -96,15 +101,14 @@ class FrameBuffer(object):
         return self.buffer.write(buf)
 
 def start_video_server():
-    with picamera.PiCamera(resolution='640x360', framerate=24) as camera:
-        global output
-        camera.rotation = 0
-        output = FrameBuffer()
-        camera.start_recording(output, format='mjpeg')
-        try:
-            address = ('', 8000)
-            server = StreamingServer(address, StreamingHandler)
-            print("Starting video streaming...")
-            server.serve_forever()
-        finally:
-            camera.stop_recording()
+    global output
+    camera.rotation = 0
+    output = FrameBuffer()
+    camera.start_recording(output, format='mjpeg')
+    try:
+        address = ('', 8000)
+        server = StreamingServer(address, StreamingHandler)
+        print("Starting video streaming...")
+        server.serve_forever()
+    finally:
+        camera.stop_recording()

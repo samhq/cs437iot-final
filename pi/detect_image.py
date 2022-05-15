@@ -10,7 +10,7 @@ import json
 import datetime
 import requests
 from dotenv import dotenv_values
-from picamera import PiCamera
+import picamera
 
 config = dotenv_values(".env")
 
@@ -85,7 +85,7 @@ def load_encodings():
     return {"found": True, "data": data}
 
 
-def detect_from_image():
+def detect_from_image(camera):
     # Initialize 'currentname' to trigger only when a new person is identified.
     currentname = "unknown"
     name = ""
@@ -94,9 +94,6 @@ def detect_from_image():
     cascade = "haarcascade_frontalface_default.xml"
     print("[INFO]: face detector...")
     detector = cv2.CascadeClassifier(cascade)
-
-    camera = PiCamera()
-    time.sleep(2)
     
     camera.capture("img.jpg")
     print("Done.")
