@@ -121,5 +121,5 @@ with picamera.PiCamera(resolution='640x360', framerate=24) as camera:
         camera.close()
 
 # print in the command line instead of file's console
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()

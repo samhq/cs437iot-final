@@ -29,7 +29,7 @@ images_path = data_path+"/images"
 server_url = config["SERVER_URL"]
 pir = MotionSensor(4)
 
-ipath = dir_path+"/main.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
+ipath = dir_path+"/video_streaming_server.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
 
 def thread_second():
     call(["python3", ipath])
@@ -137,7 +137,7 @@ def start_detector_server():
             # grab the frame from the threaded video stream and resize it
             # to 500px (to speedup processing)
             #------
-            check_kill_process('main.py')
+            check_kill_process('video_streaming_server.py')
             time.sleep(2)            
             print("Stream ended.")
             # take picture with camera

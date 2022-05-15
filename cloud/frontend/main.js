@@ -125,6 +125,12 @@ var app = new Vue({
             this.fileToRename = ""
 
             this.selectLink(this.links[0])
+        },
+
+        trainImages(deviceId) {
+            console.log("train image", deviceId)
+            axios.get(this.backendSrc + '/train/' + deviceId)
+                .then(response => ( console.log(response.data.data) ))
         }
     }
 })
