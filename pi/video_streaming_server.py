@@ -50,15 +50,15 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             try:
                 motion = 0.0
                 while True:
-                    if pir.motion_detected and time.time() - motion < 120:
+                    if pir.motion_detected and time.time() - motion > 120:
                         # capture...
-                        print("motion detected")
+                        print("motion detected", motion)
                         camera.stop_recording()
-                        time.sleep(2)
+                        time.sleep(1)
                         detect_from_image(camera)
-                        time.sleep(10)
+                        time.sleep(1)
                         camera.start_recording(output, format='mjpeg')
-                        time.sleep(2)
+                        time.sleep(1)
                         motion = time.time()
                     
                     with output.condition:
