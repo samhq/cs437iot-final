@@ -49,8 +49,8 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 while True:
                     if pir.motion_detected:
                         # capture...
+                        print("motion detected")
                         detect_from_image()
-                        pass
                     
                     with output.condition:
                         output.condition.wait()
@@ -100,6 +100,7 @@ def start_video_server():
         try:
             address = ('', 8000)
             server = StreamingServer(address, StreamingHandler)
+            print("Starting video streaming...")
             server.serve_forever()
         finally:
             camera.stop_recording()
