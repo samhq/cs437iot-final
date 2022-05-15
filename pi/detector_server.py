@@ -16,6 +16,7 @@ from dotenv import dotenv_values
 
 config = dotenv_values(".env")
 
+tmp_image = "image.jpg"
 dir_path = os.path.dirname(os.path.realpath(__file__))
 data_path = dir_path+"/data"
 settings_path = data_path+"/settings.json"
@@ -24,7 +25,7 @@ images_path = data_path+"/images"
 server_url = config["SERVER_URL"]
 pir = MotionSensor(4)
 
-ipath = "/home/pi/picar-4wd/CSIoT/Project/Final/pi/video_streaming_server.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
+ipath = dir_path+"/video_streaming_server.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
 
 def thread_second():
     call(["python3", ipath])
@@ -136,7 +137,7 @@ def start_detector_server():
             with picamera.PiCamera() as camera:
                  #change resolution to get better latency
                  camera.resolution = (640,480)
-                 camera.capture("/home/pi/picar-4wd/CSIoT/Project/Final/pi/capture.jpg")     #CHANGE PATH TO YOUR USB THUMBDRIVE
+                 camera.capture(tmp_image)     #CHANGE PATH TO YOUR USB THUMBDRIVE
 
             # alert picture taken
             print("Picture taken.")
@@ -147,7 +148,7 @@ def start_detector_server():
             #-----------------------
 
             #frame = vs.read()
-            frame = cv2.imread("/home/pi/picar-4wd/CSIoT/Project/facial_recognition/capture.jpg") 
+            frame = cv2.imread(tmp_image) 
             frame = imutils.resize(frame, width=500)
             # convert the input frame from (1) BGR to grayscale (for face
             # detection) and (2) from BGR to RGB (for face recognition)
@@ -241,6 +242,7 @@ def start_detector_server():
             em = send_email(img_name, name)
             print("[INFO]: Sending email: ", em)
             os.remove(img_name)
+            os.remove(tmp_image)
             print("[INFO]: Removed image")
             currentname = name
             # update the FPS counter
@@ -264,4 +266,4 @@ def start_detector_server():
 
     # do a bit of cleanup
     cv2.destroyAllWindows()
-    vs.stop()
+    # vs.stop()

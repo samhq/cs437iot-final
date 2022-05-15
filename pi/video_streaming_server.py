@@ -22,7 +22,9 @@ PAGE="""\
 </html>
 """
 
-ipath = "/home/pi/picar-4wd/CSIoT/Project/Final/pi/detector_server.py"    #CHANGE PATH TO LOCATION OF mouse.py
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+ipath = dir_path+"/detector_server.py"    #CHANGE PATH TO LOCATION OF mouse.py
 
 def thread_second():
     call(["python3", ipath])
