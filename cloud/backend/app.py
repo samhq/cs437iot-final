@@ -1,15 +1,19 @@
 from flask import Flask, request, send_file
 from flask_cors import CORS
 import json
+from train_model import trainModelFromImages
 from utils import getDeviceFromId, getImages
 import os
 import shutil
+import requests
 from werkzeug.utils import secure_filename
+from dotenv import dotenv_values
 
-
+config = dotenv_values(".env")
 dir_path = os.path.dirname(os.path.realpath(__file__))
 data_path = dir_path+"/data"
-base_path = 'http://192.168.0.110:5000'
+base_path = config["BASE_URL"]
+
 app = Flask(__name__)
 CORS(app)
 
@@ -109,11 +113,18 @@ def postSettings(deviceId):
         return {"message": "Device not found"}, 404
 
     settings_path = data_path+"/"+deviceId+"/settings.json"
-    print(request.json)
+    # print(request.json)
     data = json.loads(request.json['settings'])
 
     with open(settings_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
+
+    # SEND DATA TO PI SERVER
+    headers = {'content-type': 'application/json'}
+    r = requests.post(device["data"]["api_url"]+"/upload/settings",
+                      headers=headers, data=json.dumps({"settings": json.dumps(data)}))
+    if not r.ok:
+        return {"error": True, "message": "Sending data to device failed"}, 404
 
     return {"error": False, "data": data}, 200
 
@@ -126,11 +137,22 @@ def trainImage(deviceId):
         return {"message": "Device not found"}, 404
 
     encode_path = data_path+"/"+deviceId+"/encodings.pickle"
-    # download all images for that device in local folder
-    # perform training
-    # save the encodings.pickle to the cloud storage
-    # push a request to device api url to download new encodings.pickle file
-    pass
+    images_path = data_path+"/"+deviceId+"/images"
+
+    train = trainModelFromImages(images_path, encode_path)
+
+    if not train:
+        return {"error": True, "message": "Cannot train now"}, 503
+
+    # SEND FILE TO PI SERVER
+    enc_file = open(encode_path, "rb")
+    # headers = {'content-type': 'application/json'}
+    r = requests.post(device["data"]["api_url"]+"/upload/encodings",
+                      files={"encodings_file": enc_file})
+    if not r.ok:
+        return {"error": True, "message": "Sending file to device failed"}, 404
+
+    return {"error": False, "message": "File sent successfully"}, 200
 
 
 @app.route("/images/<deviceId>/<filename>", methods=["GET"])

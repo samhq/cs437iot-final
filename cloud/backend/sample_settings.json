@@ -1,6 +1,4 @@
 {
-    "deviceName": "",
-    "notificationEmails": [],
-    "mailgun_api": "",
-    "sender_email": ""
+    "deviceId": "",
+    "notificationEmails": []
 }

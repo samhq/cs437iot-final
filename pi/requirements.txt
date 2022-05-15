@@ -1,0 +1,6 @@
+Flask==2.0.1
+flask-cors
+pyngrok
+face-recognition
+impiputils
+python-dotenv

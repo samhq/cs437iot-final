@@ -13,3 +13,5 @@ sudo apt update
 sudo apt install python3-pip
 
 sudo apt install libopencv-dev python3-opencv
+
+pip3 install -r requirements.txt
