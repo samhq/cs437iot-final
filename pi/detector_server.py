@@ -126,7 +126,9 @@ def start_detector_server():
 
     # start the FPS counter
     #fps = FPS().start()
-    while True:
+    lastTime = 0
+    currentTime = time.time()
+    while currentTime - lastTime > 120:
         # Initialize 'currentname' to trigger only when a new person is identified.
         currentname = ""
         name = "Unknown"
@@ -154,11 +156,6 @@ def start_detector_server():
                 
             # alert picture taken
             print("Picture taken.")
-            # run live stream again
-            processThread = threading.Thread(target=thread_second)
-            processThread.start()
-            print("Stream running. Refresh page.")
-            #-----------------------
 
             #frame = vs.read()
             frame = cv2.imread(tmp_image) 
@@ -267,7 +264,7 @@ def start_detector_server():
             print("Stream running. Refresh page.")
 
             pir.wait_for_no_motion()
-            time.sleep(10)
+            time.sleep(2)
         except Exception as e:
             print("[ERROR]: Exception: ", e)
             break
