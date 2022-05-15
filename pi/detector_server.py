@@ -128,7 +128,7 @@ def start_detector_server():
     #fps = FPS().start()
     lastTime = 0
     currentTime = time.time()
-    while currentTime - lastTime > 120:
+    while currentTime - lastTime > 30:
         # Initialize 'currentname' to trigger only when a new person is identified.
         currentname = ""
         name = "Unknown"

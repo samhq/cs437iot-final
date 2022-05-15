@@ -31,6 +31,6 @@ def getImages(data_path, devideId, base_path):
                 "date": datetime.datetime(int(s[2]), int(s[3]), int(s[4]), int(s[5]), int(s[6]), int(s[7])),
                 "image": base_path+"/images/"+devideId + "/" + file
             }
-        files.append(d)
+            files.append(d)
     newlist = sorted(files, key=lambda d: d['date'], reverse=True) 
     return newlist
