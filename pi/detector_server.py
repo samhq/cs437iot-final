@@ -202,18 +202,21 @@ def start_detector_server():
                 os.system(
                     'espeak -ven+f1 -g5 -s160 "Welcome! Someone will be with you shortly."')
             
-            em = send_email(img_name, name)
-            print("[INFO]: Sending email: ", em)
             up = upload_images([img_name])
             print("[INFO]: Uploading images: ", up)
+            
+            em = send_email(img_name, name)
+            print("[INFO]: Sending email: ", em)
             os.remove(img_name)
             print("[INFO]: Removed image")
             currentname = name
             # update the FPS counter
             fps.update()
             pir.wait_for_no_motion()
+            time.sleep(10)
         except Exception as e:
             print("[ERROR]: Exception: ", e)
+            break
 
     # stop the timer and display FPS information
     fps.stop()
