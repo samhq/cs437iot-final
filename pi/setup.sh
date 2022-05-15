@@ -11,4 +11,4 @@ sudo apt-get install libatlas-base-dev -y
 
 pip3 install -r requirements.txt
 
-python3 main.py
+# python3 main.py
