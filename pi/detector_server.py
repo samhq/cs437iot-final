@@ -11,6 +11,7 @@ from gpiozero import MotionSensor
 import os
 import json
 import datetime
+import picamera
 import requests
 from dotenv import dotenv_values
 
