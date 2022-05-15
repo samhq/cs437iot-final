@@ -2,7 +2,7 @@ import threading
 from video_streaming_server import start_video_server
 from api_server import start_api_server
 # from detector_server import start_detector_server
-from pyngrok import ngrok
+# from pyngrok import ngrok
 
 vid_srv = threading.Thread(target=start_video_server, daemon=True)
 api_srv = threading.Thread(target=start_api_server, daemon=True)
