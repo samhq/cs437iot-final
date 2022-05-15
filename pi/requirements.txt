@@ -4,3 +4,4 @@ pyngrok
 face-recognition
 imutils
 python-dotenv
+opencv-python~=4.5.3.56
