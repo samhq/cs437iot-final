@@ -4,6 +4,10 @@ import logging
 import socketserver
 from threading import Condition
 from http import server
+from gpiozero import MotionSensor
+from detect_image import detect_from_image
+
+pir = MotionSensor(4)
 
 PAGE="""\
 <html>
@@ -11,11 +15,12 @@ PAGE="""\
 <title>picamera MJPEG streaming demo</title>
 </head>
 <body>
-<h1>PiCamera MJPEG Streaming Demo</h1>
 <img src="stream.mjpg" width="640" height="360" />
 </body>
 </html>
 """
+
+motionFound = False
 
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -42,6 +47,11 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
             self.end_headers()
             try:
                 while True:
+                    if pir.motion_detected:
+                        # capture...
+                        detect_from_image()
+                        pass
+                    
                     with output.condition:
                         output.condition.wait()
                         frame = output.frame
@@ -80,7 +90,7 @@ class FrameBuffer(object):
                 self.condition.notify_all()
             self.buffer.seek(0)
         return self.buffer.write(buf)
-    
+
 def start_video_server():
     with picamera.PiCamera(resolution='640x360', framerate=24) as camera:
         global output
