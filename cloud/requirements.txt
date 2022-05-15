@@ -1,5 +1,5 @@
 Flask==2.0.1
 flask-cors
 face-recognition
-impiputils
+imutils
 python-dotenv
