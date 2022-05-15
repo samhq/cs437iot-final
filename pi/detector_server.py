@@ -176,86 +176,89 @@ def start_detector_server():
             boxes = [(y, x + w, y + h, x) for (x, y, w, h) in rects]
             print("boxes detected", str(len(boxes)))
 
-            encs = load_encodings()
-            img_name = ""
-            print("encs", encs)
+            if len(boxes) > 0:
+                encs = load_encodings()
+                img_name = ""
+                print("encs", encs)
 
-            if encs["found"]:
-                # compute the facial embeddings for each face bounding box
-                encodings = face_recognition.face_encodings(rgb, boxes)
-                names = []
-                name = "Unknown"
-                # loop over the facial embeddings
-                for encoding in encodings:
-                    # attempt to match each face in the input image to our known
-                    # encodings
-                    matches = face_recognition.compare_faces(
-                        encs["data"]["encodings"], encoding)
-                    # check to see if we have found a match
-                    if True in matches:
-                        # find the indexes of all matched faces then initialize a
-                        # dictionary to count the total number of times each face
-                        # was matched
-                        matchedIdxs = [i for (i, b) in enumerate(matches) if b]
-                        counts = {}
-                        # loop over the matched indexes and maintain a count for
-                        # each recognized face face
-                        for i in matchedIdxs:
-                            name = encs["data"]["names"][i]
-                            counts[name] = counts.get(name, 0) + 1
-                        # determine the recognized face with the largest number
-                        # of votes (note: in the event of an unlikely tie Python
-                        # will select first entry in the dictionary)
-                        name = max(counts, key=counts.get)
-                        # If someone in your dataset is identified, print their name on the screen
-                        if currentname != name:
-                            #currentname = name
-                            print(name)
-                            if name != "Unknown":  # Recognized Person
-                                img_cnt = len([entry for entry in os.listdir(
-                                    images_path) if os.path.isfile(os.path.join(images_path, entry))]) + 1
-                                var_timestamp = str(
-                                    datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-                                img_name = images_path+"/"+name+"-" + \
-                                    str(img_cnt)+"-" + var_timestamp+".jpg"
-                                cv2.imwrite(img_name, frame)
-                                print(
-                                    '[INFO]: Taking a picture and Saving it for more training purposes')
-                                os.system(
-                                    'espeak -ven+f1 -g5 -s160 "Welcome ' + str(name) + '"')
-                    # update the list of names
-                    names.append(name)
+                if encs["found"]:
+                    # compute the facial embeddings for each face bounding box
+                    encodings = face_recognition.face_encodings(rgb, boxes)
+                    names = []
+                    name = "Unknown"
+                    # loop over the facial embeddings
+                    for encoding in encodings:
+                        # attempt to match each face in the input image to our known
+                        # encodings
+                        matches = face_recognition.compare_faces(
+                            encs["data"]["encodings"], encoding)
+                        # check to see if we have found a match
+                        if True in matches:
+                            # find the indexes of all matched faces then initialize a
+                            # dictionary to count the total number of times each face
+                            # was matched
+                            matchedIdxs = [i for (i, b) in enumerate(matches) if b]
+                            counts = {}
+                            # loop over the matched indexes and maintain a count for
+                            # each recognized face face
+                            for i in matchedIdxs:
+                                name = encs["data"]["names"][i]
+                                counts[name] = counts.get(name, 0) + 1
+                            # determine the recognized face with the largest number
+                            # of votes (note: in the event of an unlikely tie Python
+                            # will select first entry in the dictionary)
+                            name = max(counts, key=counts.get)
+                            # If someone in your dataset is identified, print their name on the screen
+                            if currentname != name:
+                                #currentname = name
+                                print(name)
+                                if name != "Unknown":  # Recognized Person
+                                    img_cnt = len([entry for entry in os.listdir(
+                                        images_path) if os.path.isfile(os.path.join(images_path, entry))]) + 1
+                                    var_timestamp = str(
+                                        datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+                                    img_name = images_path+"/"+name+"-" + \
+                                        str(img_cnt)+"-" + var_timestamp+".jpg"
+                                    cv2.imwrite(img_name, frame)
+                                    print(
+                                        '[INFO]: Taking a picture and Saving it for more training purposes')
+                                    os.system(
+                                        'espeak -ven+f1 -g5 -s160 "Welcome ' + str(name) + '"')
+                        # update the list of names
+                        names.append(name)
 
-            # ===== If Image is not present in DB =====
-            print("name, currentname:", name, currentname)
+                # ===== If Image is not present in DB =====
+                print("name, currentname:", name, currentname)
 
-            if currentname != name and name == 'Unknown':
-                print(f"Visitor: {name}")
-                # Take a picture to send in the email
-                img_cnt = len([entry for entry in os.listdir(images_path)
-                               if os.path.isfile(os.path.join(images_path, entry))]) + 1
-                print("cnt", img_cnt)
-                var_timestamp = str(
-                    datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
-                print("tm", var_timestamp)
-                img_name = images_path + "/Unknown-" + \
-                    str(img_cnt) + "-" + var_timestamp + ".jpg"
-                print("img", img_name)
-                cv2.imwrite(img_name, frame)
+                if currentname != name and name == 'Unknown':
+                    print(f"Visitor: {name}")
+                    # Take a picture to send in the email
+                    img_cnt = len([entry for entry in os.listdir(images_path)
+                                if os.path.isfile(os.path.join(images_path, entry))]) + 1
+                    print("cnt", img_cnt)
+                    var_timestamp = str(
+                        datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+                    print("tm", var_timestamp)
+                    img_name = images_path + "/Unknown-" + \
+                        str(img_cnt) + "-" + var_timestamp + ".jpg"
+                    print("img", img_name)
+                    cv2.imwrite(img_name, frame)
 
-                print('[INFO]: Taking a picture and Saving it in Visitors Log.')
-                os.system(
-                    'espeak -ven+f1 -g5 -s160 "Welcome! Someone will be with you shortly."')
+                    print('[INFO]: Taking a picture and Saving it in Visitors Log.')
+                    os.system(
+                        'espeak -ven+f1 -g5 -s160 "Welcome! Someone will be with you shortly."')
 
-            up = upload_images([img_name])
-            print("[INFO]: Uploading images: ", up)
-            em = send_email(img_name, name)
-            print("[INFO]: Sending email: ", em)
-            os.remove(img_name)
-            os.remove(tmp_image)
-            print("[INFO]: Removed image")
-            currentname = name
-            lastTime = currentTime
+                up = upload_images([img_name])
+                print("[INFO]: Uploading images: ", up)
+                em = send_email(img_name, name)
+                print("[INFO]: Sending email: ", em)
+                os.remove(img_name)
+                os.remove(tmp_image)
+                print("[INFO]: Removed image")
+                currentname = name
+            
+                lastTime = currentTime
+            
             # update the FPS counter
             #fps.update()
             #----------------
