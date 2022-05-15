@@ -89,8 +89,8 @@ def load_encodings():
 
 def start_detector_server():
     # Initialize 'currentname' to trigger only when a new person is identified.
-    currentname = "Unknown"
-    name = ""
+    currentname = ""
+    name = "Unknown"
 
     # use this xml file
     cascade = "haarcascade_frontalface_default.xml"
