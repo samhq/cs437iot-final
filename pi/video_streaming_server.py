@@ -6,6 +6,7 @@ from threading import Condition
 from http import server
 from gpiozero import MotionSensor
 from detect_image import detect_from_image
+import time
 
 pir = MotionSensor(4)
 
@@ -46,11 +47,14 @@ class StreamingHandler(server.BaseHTTPRequestHandler):
                 'Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
             self.end_headers()
             try:
+                motion = 0
                 while True:
                     if pir.motion_detected:
                         # capture...
                         print("motion detected")
-                        # detect_from_image()
+                        time.sleep(2)
+                        detect_from_image()
+                        time.sleep(10)
                     
                     with output.condition:
                         output.condition.wait()
