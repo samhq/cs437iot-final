@@ -122,8 +122,8 @@ def start_detector_server():
 
             # detect faces in the grayscale frame
             rects = detector.detectMultiScale(gray, scaleFactor=1.1,
-                                            minNeighbors=5, minSize=(30, 30),
-                                            flags=cv2.CASCADE_SCALE_IMAGE)
+                                              minNeighbors=5, minSize=(30, 30),
+                                              flags=cv2.CASCADE_SCALE_IMAGE)
 
             # OpenCV returns bounding box coordinates in (x, y, w, h) order
             # but we need them in (top, right, bottom, left) order, so we
@@ -182,40 +182,40 @@ def start_detector_server():
                     names.append(name)
 
             # ===== If Image is not present in DB =====
-            print(f"name, currentname:{name},{currentname}")
+            print("name, currentname:", name, currentname)
+
             if currentname != name and name == 'Unknown':
                 print(f"Visitor: {name}")
                 # Take a picture to send in the email
                 img_cnt = len([entry for entry in os.listdir(images_path)
-                            if os.path.isfile(os.path.join(images_path, entry))]) + 1
+                               if os.path.isfile(os.path.join(images_path, entry))]) + 1
                 print("cnt", img_cnt)
                 var_timestamp = str(
                     datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
                 print("tm", var_timestamp)
-                img_name = images_path + "/Unknown-" + str(img_cnt) + "-" + var_timestamp + ".jpg"
+                img_name = images_path + "/Unknown-" + \
+                    str(img_cnt) + "-" + var_timestamp + ".jpg"
                 print("img", img_name)
                 cv2.imwrite(img_name, frame)
 
                 print('[INFO]: Taking a picture and Saving it in Visitors Log.')
                 os.system(
                     'espeak -ven+f1 -g5 -s160 "Welcome! Someone will be with you shortly."')
-            # ======================================================
+            
             em = send_email(img_name, name)
             print("[INFO]: Sending email: ", em)
             up = upload_images([img_name])
             print("[INFO]: Uploading images: ", up)
-
             os.remove(img_name)
             print("[INFO]: Removed image")
-            
             currentname = name
-
             # update the FPS counter
             fps.update()
             pir.wait_for_no_motion()
         except Exception as e:
             print("[ERROR]: Exception: ", e)
-            break
+        finally:
+            continue  
 
     # stop the timer and display FPS information
     fps.stop()
