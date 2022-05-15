@@ -4,12 +4,11 @@ import logging
 import socketserver
 from threading import Condition
 from http import server
-from gpiozero import MotionSensor
-from detect_image import detect_from_image
+import threading, os, signal
+import subprocess
+from subprocess import check_call, call
+import sys
 import time
-
-pir = MotionSensor(4)
-camera = picamera.PiCamera(resolution='640x360', framerate=24)
 
 PAGE="""\
 <html>
@@ -17,13 +16,23 @@ PAGE="""\
 <title>picamera MJPEG streaming demo</title>
 </head>
 <body>
-<img src="stream.mjpg" width="640" height="360" />
+<h1>PiCamera MJPEG Streaming Demo</h1>
+<img src="stream.mjpg" width="640" height="480" />
 </body>
 </html>
 """
 
-motionFound = False
+ipath = "/home/pi/picar-4wd/CSIoT/Project/Final/pi/detector_server.py"    #CHANGE PATH TO LOCATION OF mouse.py
 
+def thread_second():
+    call(["python3", ipath])
+
+def check_kill_process(pstring):
+    for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
+        fields = line.split()
+        pid = fields[0]
+        os.kill(int(pid), signal.SIGKILL)
+		
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/':
@@ -87,34 +96,21 @@ class FrameBuffer(object):
                 self.condition.notify_all()
             self.buffer.seek(0)
         return self.buffer.write(buf)
-
+    
 def start_video_server():
-    global output
-    camera.rotation = 0
-    motion = 0.0
-    address = ('', 8000)
-    server = StreamingServer(address, StreamingHandler)
-    print("Starting video streaming...")
-    server.serve_forever()
-    # server.server_close()
-    output = FrameBuffer()
-    camera.start_recording(output, format='mjpeg')
-    
-    while True:
-        pir.wait_for_motion()
+    with picamera.PiCamera(resolution='640x360', framerate=24) as camera:
+        global output
+        camera.rotation = 0
+        output = FrameBuffer()
+        camera.start_recording(output, format='mjpeg')
         try:
+            address = ('', 8000)
+            server = StreamingServer(address, StreamingHandler)
+            print("Streaming.")
+            check_kill_process("detector_server.py")
+            processThread = threading.Thread(target=thread_second)
+            processThread.start()
+            print("Waiting for Motion to be Detected.")
+            server.serve_forever()
+        finally:
             camera.stop_recording()
-            if time.time() - motion > 150:
-                # capture...
-                print("motion detected", motion)
-                time.sleep(1)
-                detect_from_image(camera)
-                print("detect done")           
-                time.sleep(1)
-                motion = time.time()
-            
-            pir.wait_for_no_motion()
-            camera.start_recording(output, format='mjpeg')
-        except:
-            break
-    

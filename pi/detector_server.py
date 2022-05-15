@@ -24,6 +24,21 @@ images_path = data_path+"/images"
 server_url = config["SERVER_URL"]
 pir = MotionSensor(4)
 
+ipath = "/home/pi/picar-4wd/CSIoT/Project/Final/pi/video_streaming_server.py"    #CHANGE THIS PATH TO THE LOCATION OF live.py
+
+def thread_second():
+    call(["python3", ipath])
+
+def check_kill_process(pstring):
+    for line in os.popen("ps ax | grep " + pstring + " | grep -v grep"):
+        fields = line.split()
+        print(fields)
+        pid = fields[0]
+        print(pid)
+        os.kill(int(pid), signal.SIGKILL)
+
+# ==========================
+
 
 def upload_images(images):
     params = load_params()
@@ -99,7 +114,7 @@ def start_detector_server():
 
     # initialize the video stream and allow the camera sensor to warm up
     # print("[INFO] starting video stream...")
-    vs = VideoStream(usePiCamera=True).start()
+    #---AK vs = VideoStream(usePiCamera=True).start()
     time.sleep(2.0)
 
     # start the FPS counter
@@ -114,7 +129,25 @@ def start_detector_server():
             print("Motion detected")
             # grab the frame from the threaded video stream and resize it
             # to 500px (to speedup processing)
-            frame = vs.read()
+            #------
+            check_kill_process('video_streaming_server.py')
+            print("Stream ended.")
+            # take picture with camera
+            with picamera.PiCamera() as camera:
+                 #change resolution to get better latency
+                 camera.resolution = (640,480)
+                 camera.capture("/home/pi/picar-4wd/CSIoT/Project/Final/pi/capture.jpg")     #CHANGE PATH TO YOUR USB THUMBDRIVE
+
+            # alert picture taken
+            print("Picture taken.")
+            # run live stream again
+            processThread = threading.Thread(target=thread_second)
+            processThread.start()
+            print("Stream running. Refresh page.")
+            #-----------------------
+
+            #frame = vs.read()
+            frame = cv2.imread("/home/pi/picar-4wd/CSIoT/Project/facial_recognition/capture.jpg") 
             frame = imutils.resize(frame, width=500)
             # convert the input frame from (1) BGR to grayscale (for face
             # detection) and (2) from BGR to RGB (for face recognition)
@@ -212,6 +245,12 @@ def start_detector_server():
             currentname = name
             # update the FPS counter
             fps.update()
+            #----------------
+            # run live stream again
+            processThread = threading.Thread(target=thread_second)
+            processThread.start()
+            print("Stream running. Refresh page.")
+
             pir.wait_for_no_motion()
             time.sleep(10)
         except Exception as e:

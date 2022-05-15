@@ -16,10 +16,10 @@ vid_srv.join()
 api_srv.join()
 # det_srv.join()
 
-video_tunnel = ngrok.connect(8000, "http")
-print("Video Server", video_tunnel)
-
-api_tunnel = ngrok.connect(5000, "http")
-print("API Server", api_tunnel)
+#video_tunnel = ngrok.connect(8000, "http")
+#print("Video Server", video_tunnel)
+#
+#api_tunnel = ngrok.connect(5000, "http")
+#print("API Server", api_tunnel)
 
 print("Success, terminating..")
