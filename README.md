@@ -117,3 +117,10 @@ From that time forward, before greeting, new people image will be matched first.
 ## View Live Feed
 
 If you go to the *Manage Device* > *Live Feed* link, you can view the live stream from the camera. One thing to note is when the pi is in the process of detecting and processing the image recognition, live video will be unavailable for a short period of time.
+
+## Team Members
+
+- Ayush Khanna (<akhanna6@illinois.edu>)
+- Gazi Muhammad Samiul Hoque (<ghoque2@illinois.edu>)
+- Jennifer Tsai (<jtsai21@illinois.edu>)
+- Yunhan Guo (<yunhang2@illinois.edu>)
