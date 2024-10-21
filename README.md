@@ -2,7 +2,7 @@
 
 ## Demo Video
 
-You can find a demo and code walk-through video [https://www.dropbox.com/scl/fi/p0hp766kiu69kl1p8wmuf/IOT-Project.mp4?rlkey=k8q1ywqswvbxrx8bact4c3qb4&st=zdn44a5u&dl=0](here).
+You can find a demo and code walk-through video at [https://www.dropbox.com/scl/fi/p0hp766kiu69kl1p8wmuf/IOT-Project.mp4?rlkey=k8q1ywqswvbxrx8bact4c3qb4&st=zdn44a5u&dl=0]([here](https://www.dropbox.com/scl/fi/p0hp766kiu69kl1p8wmuf/IOT-Project.mp4?rlkey=k8q1ywqswvbxrx8bact4c3qb4&st=zdn44a5u&dl=0)).
 
 Old Video Link: [https://uofi.box.com/s/qq5l0aw8imhrtn1ng0cqr4zyp5753q4w](https://uofi.box.com/s/qq5l0aw8imhrtn1ng0cqr4zyp5753q4w).
 
